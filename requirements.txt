@@ -1,6 +1,6 @@
-win32api
+pywin32
 pytesseract
 keyboard
 pyautogui
-cv2
+opencv-python
 pyqt5
