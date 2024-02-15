@@ -15,8 +15,6 @@ import sys
 import cv2
 import settings
 
-sens = 0.8/0.8
-
 global label
 global label_2
 
@@ -32,7 +30,7 @@ class CURSORINFO(ctypes.Structure):
 
 # Load function from user32.dll and set argument types
     
-class Thread2(QThread):
+class Thread(QThread):
     def run(self):
 
         self.number = 7
@@ -62,15 +60,13 @@ class Thread2(QThread):
         return f"{self.max_blue_pixel} {self.list_max}"
 
     def search_active_inventory_weapon(self, img):
-        print(img.getpixel((0,0))[2])
         if img.getpixel((0,0))[2]> 100: 
             return 0
         else:
-            print(img.getpixel((0,0))[2])
             return 1 
 
 
-class Thread1(QThread):
+class Main(QThread):
 
     global label
     global label_2
@@ -93,20 +89,21 @@ class Thread1(QThread):
 
     def run(self):
 
-        self.thread2 = Thread2()
+        self.thread2 = Thread()
         self.thread2.start()
 
         self.GetCursorInfo = ctypes.windll.user32.GetCursorInfo
         self.GetCursorInfo.argtypes = [ctypes.POINTER(CURSORINFO)]
         
         self.weapon_pattern = settings.Settings.weapon_pattern
-
-
-
+        self.path_tesseract = settings.Settings.path_tesseract
+        self.btn_off = settings.Settings.btn_off
+        self.btn_start = settings.Settings.btn_start
+        
         while True:
             time.sleep(0.1)
             label.setText(f"inv:{self.thread2.get_number()} {self.thread2.get_test()}") # cntr:{win32api.GetKeyState(win32con.VK_CONTROL)} rmb:{win32api.GetKeyState(0x02)} lmb:{win32api.GetKeyState(0x01)} 
-            if keyboard.is_pressed("f3"):
+            if keyboard.is_pressed(self.btn_start):
                 self.auto_identifier()   
 
     
@@ -132,12 +129,12 @@ class Thread1(QThread):
         img_name_weapon.save("test1.png")
         img_modules = ImageGrab.grab((680, 380, 950, 460))
         pyautogui.press("tab")
-        pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe' 
+        pytesseract.pytesseract.tesseract_cmd = self.path_tesseract
         string_name_weapon = pytesseract.image_to_string(img_name_weapon, lang="rus")
         string_name_weapon = ' '.join(string_name_weapon.split())
         
         string_img_modules = self.search_modules(img_modules, "holo", "search/holo.png")
-        print(string_img_modules)
+
         if string_img_modules == "normal":
             string_img_modules = self.search_modules(img_modules, "x8", "search/x8.png")
 
@@ -158,7 +155,7 @@ class Thread1(QThread):
         while True:
                 time.sleep(0.01)
 
-                if keyboard.is_pressed("u"):
+                if keyboard.is_pressed(self.btn_off):
                     label.setText("weapon: None")
                     label.update()
                     return 
@@ -170,7 +167,7 @@ class Thread1(QThread):
                         time1 = self.weapon_pattern[weapon_name][status][bt][rmb]['Time1']
                         x = self.weapon_pattern[weapon_name][status][bt][rmb]['X']
                         y = self.weapon_pattern[weapon_name][status][bt][rmb]['Y']
-                        win32api.mouse_event(win32con.MOUSE_MOVED, int(x*sens + 0.5), int(y*sens + 0.5))
+                        win32api.mouse_event(win32con.MOUSE_MOVED, int(x + 0.5), int(y + 0.5))
                         time.sleep(time1)
     
     
@@ -189,7 +186,7 @@ class Thread1(QThread):
 
         while True:
                 time.sleep(0.01)
-                if keyboard.is_pressed("u"):
+                if keyboard.is_pressed(self.btn_off):
                     label.setText("weapon: None")
                     label.update()
                     return 0
@@ -202,7 +199,7 @@ class Thread1(QThread):
                         x = self.weapon_pattern[weapon_name][status][bt][rmb]['X']
                         y = self.weapon_pattern[weapon_name][status][bt][rmb]['Y']
                         label.setText(f"weapon: {self.weapon_pattern[weapon_name][status]['Text']} {x} {y}")
-                        win32api.mouse_event(win32con.MOUSE_MOVED, int(x*sens + 0.5), int(y*sens + 0.5))
+                        win32api.mouse_event(win32con.MOUSE_MOVED, int(x + 0.5), int(y + 0.5))
                         time.sleep(time1)
                     else:
                         bt = self.get_bt()
@@ -211,7 +208,7 @@ class Thread1(QThread):
                         x = self.weapon_pattern[weapon_name][status][bt][rmb]['X2']
                         y = self.weapon_pattern[weapon_name][status][bt][rmb]['Y2']
                         label.setText(f"weapon: {self.weapon_pattern[weapon_name][status]['Text']} {x} {y}")
-                        win32api.mouse_event(win32con.MOUSE_MOVED, int(x*sens + 0.5), int(y*sens + 0.5))
+                        win32api.mouse_event(win32con.MOUSE_MOVED, int(x + 0.5), int(y + 0.5))
                         time.sleep(time2)
                     n += 1 
                 else:
@@ -224,7 +221,7 @@ class MyWindow(object):
         global label
         global label_2
 
-        self.thread1 = Thread1()
+        self.thread1 = Main()
         self.thread1.start()
 
         MainWindow.resize(250, 70)

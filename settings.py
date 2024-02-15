@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 class Settings:
+    path_tesseract = "C:/Program Files/Tesseract-OCR/tesseract.exe" # change it to yours  
+    btn_start = "f3"
+    btn_off = "u"
     weapon_pattern = {
                 "МР5А4": {
                     "normal":{
