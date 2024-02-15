@@ -1,0 +1,6 @@
+win32api
+pytesseract
+keyboard
+pyautogui
+cv2
+pyqt5
