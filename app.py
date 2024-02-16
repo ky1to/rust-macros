@@ -126,7 +126,6 @@ class Main(QThread):
         pyautogui.press("tab")
         time.sleep(0.01)
         img_name_weapon = ImageGrab.grab((650, 100, 1300, 150))
-        img_name_weapon.save("test1.png")
         img_modules = ImageGrab.grab((680, 380, 950, 460))
         pyautogui.press("tab")
         pytesseract.pytesseract.tesseract_cmd = self.path_tesseract
