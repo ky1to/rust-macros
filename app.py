@@ -102,7 +102,7 @@ class Main(QThread):
         
         while True:
             time.sleep(0.1)
-            label.setText(f"inv:{self.thread2.get_number()} {self.thread2.get_test()}") # cntr:{win32api.GetKeyState(win32con.VK_CONTROL)} rmb:{win32api.GetKeyState(0x02)} lmb:{win32api.GetKeyState(0x01)} 
+            label.setText(f"inv:{self.thread2.get_number()}")
             if keyboard.is_pressed(self.btn_start):
                 self.auto_identifier()   
 
@@ -240,7 +240,7 @@ class MyWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "SBERBANK"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "-_-"))
         label.setText(_translate("MainWindow", "weapon: None"))
         label_2.setText(_translate("MainWindow", "this macro for Rust was created by ky1to"))
 
