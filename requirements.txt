@@ -4,3 +4,4 @@ keyboard
 pyautogui
 opencv-python
 pyqt5
+pillow
