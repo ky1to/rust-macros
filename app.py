@@ -3,7 +3,7 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore    import QThread 
-from PIL import Image, ImageGrab
+from PIL import ImageGrab
 import win32api, win32con
 import numpy as np
 import pytesseract
